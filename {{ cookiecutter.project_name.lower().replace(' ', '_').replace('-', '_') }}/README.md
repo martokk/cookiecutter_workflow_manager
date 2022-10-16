@@ -94,6 +94,8 @@ or with `Poetry`:
 poetry run {{ cookiecutter.project_name }} --help
 ```
 
+{%- endif %}
+
 ## 📈 Releases
 
 You can see the list of available releases on the [GitHub Releases](https://github.com/{{ cookiecutter.github_name }}/{{ cookiecutter.project_name }}/releases) page.
