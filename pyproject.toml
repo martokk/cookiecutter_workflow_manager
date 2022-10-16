@@ -32,6 +32,7 @@ classifiers = []
 [tool.poetry.dependencies]
 python = "^3.10"
 cookiecutter = "^1.7.3"
+loguru = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.1"

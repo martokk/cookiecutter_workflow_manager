@@ -46,6 +46,8 @@ python = "^{{ cookiecutter.minimal_python_version }}"
 typer = {extras = ["all"], version = "^0.4.0"}
 rich = "^10.14.0"
 {% endif %}
+loguru = "^0.6.0"
+
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.1"
 black = {version = "^22.3.0", allow-prereleases = true}
