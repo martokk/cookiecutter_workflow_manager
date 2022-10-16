@@ -1,6 +1,6 @@
 #* Variables
 SHELL := /usr/bin/env bash
-PYTHON := python
+PYTHON := python3
 PYTHONPATH := `pwd`
 
 #* Poetry
@@ -15,18 +15,29 @@ poetry-remove:
 #* Installation
 .PHONY: install
 install:
+	# Install Requirements
 	poetry lock -n && poetry export --without-hashes > requirements.txt
 	poetry install -n
+
+	# Install Types
 	-poetry run mypy --install-types --non-interactive hooks tests
+
+	# Initialize Git repository
+	[[ ! -d .git ]] && git init || echo "git already initalized."
+
 
 .PHONY: pre-commit-install
 pre-commit-install:
 	poetry run pre-commit install
 
+.PHONY: pre-commit-uninstall
+pre-commit-uninstall:
+	poetry run pre-commit uninstall
+
 #* Formatters
 .PHONY: codestyle
 codestyle:
-	poetry run pyupgrade --exit-zero-even-if-changed --py37-plus **/*.py
+	poetry run pyupgrade --exit-zero-even-if-changed --py310-plus **/*.py
 	poetry run isort --settings-path pyproject.toml hooks tests
 	poetry run black --config pyproject.toml hooks tests
 

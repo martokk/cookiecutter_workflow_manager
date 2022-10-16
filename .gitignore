@@ -130,8 +130,12 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+build_win/
+build_linux/
 develop-eggs/
 dist/
+dist_win/
+dist_linux/
 downloads/
 eggs/
 .eggs/
