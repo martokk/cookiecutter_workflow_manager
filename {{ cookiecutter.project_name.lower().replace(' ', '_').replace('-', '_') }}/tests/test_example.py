@@ -7,7 +7,7 @@ from {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}
 @pytest.mark.parametrize(
     ("name", "expected"),
     [
-        ("Jeanette", "Hello Jeanette from click! See __main__.py"), 
+        ("Jeanette", "Hello Jeanette from click! See __main__.py"),
         ("Raven", "Hello Raven from click! See __main__.py"),
         ("Maxine", "Hello Maxine from click! See __main__.py"),
         ("Matteo", "Hello Matteo from click! See __main__.py"),
