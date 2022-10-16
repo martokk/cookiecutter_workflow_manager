@@ -5,9 +5,13 @@ from random import choice
 
 import typer
 from rich.console import Console
+from loguru import logger
 
 from {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }} import version
-from {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}.example import hello
+from {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}.example import ExampleClass
+
+# Configure Loguru Logger
+logger.add("logs/log_{time}.log", level="TRACE", rotation="20 MB")
 
 
 class Color(str, Enum):
@@ -34,7 +38,7 @@ def version_callback(print_version: bool) -> None:
         raise typer.Exit()
 
 
-@app.command(name="")
+@app.command(names="")
 def main(
     name: str = typer.Option(..., help="Person to greet."),
     color: Optional[Color] = typer.Option(
@@ -54,12 +58,19 @@ def main(
         help="Prints the version of the {{ cookiecutter.project_name }} package.",
     ),
 ) -> None:
-    """Print a greeting with a giving name."""
-    if color is None:
-        color = choice(list(Color))
 
-    greeting: str = hello(name)
+    example = ExampleClass()
+
+    # Example Entry Point
+    color = choice(list(Color)) if color is None else color
+    greeting: str = example.example(name=name)
+    logger.into(f"Simple Logging! {name=}")
     console.print(f"[bold {color}]{greeting}[/]")
+    logger.sucess(f"Printed Name! {name=}")
+
+    # Example #DIV/0 Logging Error (caught by @logger.catch decorator)
+    example.example_divide_by_zero()
+
 
 
 if __name__ == "__main__":

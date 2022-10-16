@@ -1,19 +1,12 @@
 """Example of code."""
+from loguru import logger
 
 
-def hello(name: str) -> str:
-    """Just an greetings example.
+class ExampleClass:
+    @staticmethod
+    def print_name(name: str) -> str:
+        return f"Hello {name} from click! See __main__.py"
 
-    Args:
-        name (str): Name to greet.
-
-    Returns:
-        str: greeting message
-
-    Examples:
-        .. code:: python
-
-            >>> hello("Roman")
-            'Hello Roman!'
-    """
-    return f"Hello {name}!"
+    @logger.catch
+    def example_divide_by_zero(self) -> float:
+        return 100 / 0
