@@ -43,28 +43,31 @@ classifiers = [  #! Update me
 python = "^{{ cookiecutter.minimal_python_version }}"
 {% if cookiecutter.minimal_python_version == '3.7' -%}importlib_metadata = {version = "^4.5.0", python = "<3.8"}{%- endif -%}
 {%+ if cookiecutter.create_example_template == 'cli' %}
-typer = {extras = ["all"], version = "^0.4.0"}
-rich = "^10.14.0"
+typer = {extras = ["all"], version = "^0.6.1"}
+rich = "^12.6.0"
+colorama = "^0.4.5"
 {% endif %}
 loguru = "^0.6.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 bandit = "^1.7.1"
 black = {version = "^22.3.0", allow-prereleases = true}
 darglint = "^1.8.1"
+flake8 = "^5.0.4"
 isort = {extras = ["colors"], version = "^5.10.1"}
-mypy = "^0.910"
+mypy = "^0.982"
 mypy-extensions = "^0.4.3"
 pre-commit = "^2.15.0"
 pydocstyle = "^6.1.1"
 pylint = "^2.11.1"
-pytest = "^6.2.5"
-pyupgrade = "^2.29.1"
-safety = "^1.10.3"
+pytest = "^7.1.3"
+pytest-mock = "^3.10.0"
+pyupgrade = "^3.1.0"
+safety = "^2.3.1"
 coverage = "^6.1.2"
 coverage-badge = "^1.1.0"
 pytest-html = "^3.1.1"
-pytest-cov = "^3.0.0"
+pytest-cov = "^4.0.0"
 
 [tool.black]
 # https://github.com/psf/black
