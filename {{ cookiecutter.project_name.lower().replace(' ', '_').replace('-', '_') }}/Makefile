@@ -137,11 +137,11 @@ build-pyinstaller-win: ## Build Windows Executable
 
 .PHONY: build-pyqt5-resources
 build-pyqt5-resources: ## Build PyQt5 Resources File
-	pyrcc5 ./$(IMAGE)/resources.qrc -o ./resources_rc.py
+	pyrcc5 $(PYTHONPATH)/assets/ui/resources.qrc -o $(PYTHONPATH)/$(IMAGE)/resources_rc.py
 
 .PHONY: build-pyqt5-ui
-build-build-pyqt5-ui: ## Build PyQt5 QtDesigner UI File
-	pyuic5 -x ./pyqt5_ui.ui -o ./pyqt5_ui.py  
+build-pyqt5-ui: ## Build PyQt5 QtDesigner UI File
+	pyuic5 -x $(PYTHONPATH)/assets/ui/pyqt5_ui.ui -o $(PYTHONPATH)/$(IMAGE)/pyqt5_ui.py
 
 .PHONY: build-desktop-file
 build-desktop-file: ## Build .desktop File
