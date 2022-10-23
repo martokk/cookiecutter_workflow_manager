@@ -38,7 +38,7 @@ def generate_license(directory: Path, licence: str) -> None:
     rmtree(str(directory / "_licences"))
 
 
-def remove_unused_files(directory: Path, module_name: str, need_to_remove_cli: bool, , need_to_remove_docker: bool) -> None:
+def remove_unused_files(directory: Path, module_name: str, need_to_remove_cli: bool, need_to_remove_docker: bool) -> None:
     """Remove unused files.
 
     Args:
