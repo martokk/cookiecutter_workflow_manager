@@ -23,6 +23,7 @@ uninstall-poetry: ## Uninstall Poetry
 
 .PHONY: install-pyinstaller
 install-pyinstaller: ## Download and install PyInstaller
+	poetry run sudo apt install libpython3.10-dev -y
 	poetry add pyinstaller@latest pillow@latest
 
 .PHONY: remove-pyinstaller
