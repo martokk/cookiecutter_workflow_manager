@@ -120,7 +120,7 @@ build-pyinstaller-linux: ## Build Linux Executable
 		--onefile \
 		--windowed \
 		--paths=./$(IMAGE) \
-		--icon=./$(IMAGE)/resources/images/icon.png \
+		--icon=./assets/images/icon.png \
 		--workpath=./build_linux \
 		--distpath=./dist_linux
 
@@ -131,7 +131,7 @@ build-pyinstaller-win: ## Build Windows Executable
 		--onefile \
 		--windowed \
 		--paths=./$(IMAGE) \
-		--icon=./$(IMAGE)/resources/images/icon.png \
+		--icon=./assets/images/icon.png \
 		--workpath=./build_win \
 		--distpath=./dist_win
 
