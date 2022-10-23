@@ -10,7 +10,7 @@
   "version": "0.0.1",
   "line_length": 100,
   "create_example_template": ["cli", "none"],
-
+  "create_dockerfile_template": ["yes", "no"],
   "_copy_without_render": [
     "poetry.lock"
   ]

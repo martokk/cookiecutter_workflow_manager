@@ -10,6 +10,7 @@ PROJECT_DIRECTORY = Path.cwd().absolute()
 PROJECT_NAME = "{{ cookiecutter.project_name }}"
 PROJECT_MODULE = "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}"
 CREATE_EXAMPLE_TEMPLATE = "{{ cookiecutter.create_example_template }}"
+CREATE_DOCKERFILE_TEMPLATE = "{{ cookiecutter.create_dockerfile_template }}"
 
 # Values to generate correct license
 LICENSE = "{{ cookiecutter.license }}"
@@ -37,21 +38,28 @@ def generate_license(directory: Path, licence: str) -> None:
     rmtree(str(directory / "_licences"))
 
 
-def remove_unused_files(directory: Path, module_name: str, need_to_remove_cli: bool) -> None:
+def remove_unused_files(directory: Path, module_name: str, need_to_remove_cli: bool, , need_to_remove_docker: bool) -> None:
     """Remove unused files.
 
     Args:
         directory: path to the project directory
         module_name: project module name
         need_to_remove_cli: flag for removing CLI related files
+        need_to_remove_docker: flag for removing Docker related files
     """
     files_to_delete: List[Path] = []
 
     def _cli_specific_files() -> List[Path]:
         return [directory / module_name / "__main__.py"]
 
+    def _docker_specific_files() -> List[Path]:
+        return [directory / module_name / "Dockerfile", directory / module_name / ".dockerignore"]
+
     if need_to_remove_cli:
         files_to_delete.extend(_cli_specific_files())
+
+    if need_to_remove_docker:
+        files_to_delete.extend(_docker_specific_files())
 
     for path in files_to_delete:
         path.unlink()
@@ -101,6 +109,7 @@ def main() -> None:
         directory=PROJECT_DIRECTORY,
         module_name=PROJECT_MODULE,
         need_to_remove_cli=str(CREATE_EXAMPLE_TEMPLATE) != "cli",
+        need_to_remove_docker=str(CREATE_DOCKERFILE_TEMPLATE) == "no",
     )
     print_further_instructions(project_name=PROJECT_NAME, github=GITHUB_USER)
 
