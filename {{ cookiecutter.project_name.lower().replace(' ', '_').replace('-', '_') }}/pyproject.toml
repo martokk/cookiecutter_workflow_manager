@@ -41,13 +41,13 @@ classifiers = [  #! Update me
 
 [tool.poetry.dependencies]
 python = "^{{ cookiecutter.minimal_python_version }}"
+loguru = "^0.6.0"
 {% if cookiecutter.minimal_python_version == '3.7' -%}importlib_metadata = {version = "^4.5.0", python = "<3.8"}{%- endif -%}
 {%+ if cookiecutter.create_example_template == 'cli' %}
 typer = {extras = ["all"], version = "^0.6.1"}
 rich = "^12.6.0"
 colorama = "^0.4.5"
 {% endif %}
-loguru = "^0.6.0"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.1"
@@ -110,7 +110,6 @@ python_version = "{{ cookiecutter.minimal_python_version }}"
 pretty = true
 show_traceback = true
 color_output = true
-
 allow_redefinition = false
 check_untyped_defs = true
 disallow_any_generics = true
@@ -130,6 +129,9 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
+[[tool.mypy.overrides]]
+module = "*.pyqt5_ui"
+ignore_errors = true
 
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/6.2.x/customize.html#pyproject-toml

@@ -1,51 +1,4 @@
-# {{ cookiecutter.project_name }}
-
----
-
----
-
-## Very first steps (DELETE THIS AFTER COMPLETING!)
-
-### Initialize your code
-
-1. Initialize `git` inside your repo:
-
-```bash
-cd {{ cookiecutter.project_name }} && git init
-```
-
-2. If you don't have `Poetry` installed run:
-
-```bash
-make poetry-download
-```
-
-3. Initialize poetry and install `pre-commit` hooks:
-
-```bash
-make install
-make pre-commit-install
-```
-
-4. Run the codestyle:
-
-```bash
-make codestyle
-```
-
-5. Upload initial code to GitHub:
-
-```bash
-git add .
-git commit -m ":tada: Initial commit"
-git branch -M main
-git remote add origin https://github.com/{{ cookiecutter.github_name }}/{{ cookiecutter.project_name }}.git
-git push -u origin main
-```
-
-Read more on the DEV_README.md file.
-
----
+# {{ cookiecutter.project_name.title().replace('_', ' ').replace('-', ' ') }}
 
 ---
 
@@ -73,13 +26,7 @@ Read more on the DEV_README.md file.
 ## Installation
 
 ```bash
-pip install -U {{ cookiecutter.project_name }}
-```
-
-or install with `Poetry`
-
-```bash
-poetry add {{ cookiecutter.project_name }}
+pip install {{ cookiecutter.project_name }}
 ```
 
 {% if cookiecutter.create_example_template == 'cli' -%}Then you can run
@@ -88,13 +35,9 @@ poetry add {{ cookiecutter.project_name }}
 {{ cookiecutter.project_name }} --help
 ```
 
-or with `Poetry`:
-
-```bash
-poetry run {{ cookiecutter.project_name }} --help
-```
-
 {%- endif %}
+
+## Usage
 
 ## 📈 Releases
 
