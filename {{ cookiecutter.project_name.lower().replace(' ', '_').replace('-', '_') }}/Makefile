@@ -11,7 +11,7 @@ VERSION := latest
 
 
 #-----------------------------------------------------------------------------------------
-# INSTALLATION
+# DEV INSTALLATION
 #-----------------------------------------------------------------------------------------
 .PHONY: install-poetry
 install-poetry: ## Download and install Poetry
@@ -81,13 +81,13 @@ codestyle: ## Apply Formatting via PyUpgrade, ISort, Black.
 check-codestyle: ## Check Formatting via ISort, Black, darglint.
 	poetry run isort --diff --check-only --settings-path pyproject.toml ./
 	poetry run black --diff --check --config pyproject.toml ./
-	poetry run darglint --verbosity 2 {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }} tests
+	poetry run darglint --verbosity 2 $(IMAGE) tests
 
 .PHONY: check-safety
 check-safety: ## Check Securty & Safty via Bandit, Safety.
 	poetry check
 	poetry run safety check --full-report
-	poetry run bandit -ll --recursive {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }} tests
+	poetry run bandit -ll --recursive $(IMAGE) tests
 
 .PHONY: mypy
 mypy: ## Typechecking via MyPy
@@ -102,17 +102,21 @@ tests: test ## Run Tests & Coverage
 
 .PHONY: test
 test: ## Run Tests & Coverage
-	PYTHONPATH=$(PYTHONPATH) poetry run pytest -c pyproject.toml --cov-report=html --cov={{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }} tests/
+	PYTHONPATH=$(PYTHONPATH) poetry run pytest -c pyproject.toml --cov-report=html --cov=$(IMAGE) tests/
 	poetry run coverage-badge -o assets/images/coverage.svg -f
 
 
 #-----------------------------------------------------------------------------------------
-# BUILDS
+# BUILD PACKAGE
 #-----------------------------------------------------------------------------------------
 .PHONY: build-package
 build-package: ## Build as Package
 	poetry build
 
+
+#-----------------------------------------------------------------------------------------
+# BUILD EXECUTABLE
+#-----------------------------------------------------------------------------------------
 .PHONY: build-pyinstaller-linux
 build-pyinstaller-linux: ## Build Linux Executable
 	pyinstaller $(IMAGE)/__main__.py \
@@ -123,7 +127,6 @@ build-pyinstaller-linux: ## Build Linux Executable
 		--icon=./assets/images/icon.png \
 		--workpath=./build_linux \
 		--distpath=./dist_linux
-
 .PHONY: build-pyinstaller-win
 build-pyinstaller-win: ## Build Windows Executable
 	pyinstaller $(IMAGE)/__main__.py \
@@ -136,6 +139,9 @@ build-pyinstaller-win: ## Build Windows Executable
 		--distpath=./dist_win
 
 
+#-----------------------------------------------------------------------------------------
+# BUILD RESOURCES
+#-----------------------------------------------------------------------------------------
 .PHONY: build-pyqt5-resources
 build-pyqt5-resources: ## Build PyQt5 Resources File
 	pyrcc5 $(PYTHONPATH)/assets/ui/resources.qrc -o $(PYTHONPATH)/$(IMAGE)/resources_rc.py
@@ -147,14 +153,33 @@ build-pyqt5-ui: ## Build PyQt5 QtDesigner UI File
 .PHONY: build-desktop-file
 build-desktop-file: ## Build .desktop File
 	echo "[Desktop Entry]\n"\
-		"Name={{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}\n"\
+		"Name=$(IMAGE)\n"\
 		"Icon=$(PYTHONPATH)/$(IMAGE)/resources/images/icon.png\n"\
 		"Type=Application\n"\
 		"Exec=$(PYTHONPATH)/dist_linux/$(IMAGE)\n"\
 		"Terminal=false" > "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
 
+
+
+#-----------------------------------------------------------------------------------------
+# INSTALL EXECUTABLE, SHORTCUTS, RESOURCES
+#-----------------------------------------------------------------------------------------
+.PHONY: install-linux
+install-linux: install-linux-executable install-linux-user-config  install-linux-desktop-file ## Full Installl of Executable, User Config(won't overwrite), Desktop File
+	echo "Completed Install."
+
+.PHONY: install-linux-executable
+install-linux-executable: ## Installs binary in ~/bin
+	mkdir -p ~/bin
+	ln -sfv $(PYTHONPATH)/dist_linux/$(IMAGE) /home/${USER}/bin/$(IMAGE)
+
+.PHONY: install-linux-user-config
+install-linux-user-config: ## Installs config in ~/.vapps
+	mkdir -p $(HOME)/.vapps
+	cp -n $(PYTHONPATH)/$(IMAGE)/.vapps/$(IMAGE).yaml $(HOME)/.vapps/$(IMAGE).yaml
+
 .PHONY: install-desktop-file
-install-desktop-file: ## Install .desktop shortcut for user
+install-desktop-file: build-desktop-file ## Install .desktop shortcut for user
 	desktop-file-install --dir=~/.local/share/applications "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
 	update-desktop-database ~/.local/share/applications
 
@@ -167,7 +192,7 @@ update-desktop-database: ## Updates Linux database of .desktop shortcuts
 # DOCKER
 #-----------------------------------------------------------------------------------------
 # Example: make docker-build VERSION=latest
-# Example: make docker-build IMAGE=some_name VERSION={{ cookiecutter.version }}
+# Example: make docker-build IMAGE=some_name VERSION=0.0.1
 .PHONY: docker-build
 docker-build: ## Build a docker image from Dockerfile
 	@echo Building docker $(IMAGE):$(VERSION) ...
@@ -176,7 +201,7 @@ docker-build: ## Build a docker image from Dockerfile
 		-f ./docker/Dockerfile --no-cache
 
 # Example: make docker-remove VERSION=latest
-# Example: make docker-remove IMAGE=some_name VERSION={{ cookiecutter.version }}
+# Example: make docker-remove IMAGE=some_name VERSION=0.0.1
 .PHONY: docker-remove
 docker-remove: ## Remove Docker Image
 	@echo Removing docker $(IMAGE):$(VERSION) ...
@@ -192,6 +217,10 @@ cleanup: pycache-remove dsstore-remove mypycache-remove ipynbcheckpoints-remove 
 .PHONY: pycache-remove
 pycache-remove: ## Clean PyCache
 	find . | grep -E "(__pycache__|\.pyc|\.pyo$$)" | xargs rm -rf
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
 
 .PHONY: dsstore-remove
 dsstore-remove: ## Clean .DS_Store
@@ -214,7 +243,9 @@ build-remove: ## Clean Builds
 	rm -rf build/
 	rm -rf build_linux/
 	rm -rf build_win/
-
+	rm -fr .eggs/
+	find . -name '*.egg-info' -exec rm -fr {} +
+	find . -name '*.egg' -exec rm -f {} +
 
 #-----------------------------------------------------------------------------------------
 # HELP
