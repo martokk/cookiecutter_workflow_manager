@@ -126,7 +126,7 @@ build-pyinstaller-linux: ## Build Linux Executable
 		--paths=$(PYTHONPATH)/$(IMAGE) \
 		--icon=$(PYTHONPATH)/assets/images/icon.png \
 		--workpath=$(PYTHONPATH)/build_linux \
-		--distpath=$(PYTHONPATH)/dist_linux
+		--distpath=$(PYTHONPATH)/dist_linux \
 		--name=$(IMAGE)
 
 .PHONY: build-pyinstaller-win
@@ -138,7 +138,7 @@ build-pyinstaller-win: ## Build Windows Executable
 		--paths=$(PYTHONPATH)/$(IMAGE) \
 		--icon=$(PYTHONPATH)/assets/images/icon.png \
 		--workpath=$(PYTHONPATH)/build_win \
-		--distpath=$(PYTHONPATH)/dist_win
+		--distpath=$(PYTHONPATH)/dist_win \
 		--name=$(IMAGE)
 
 
