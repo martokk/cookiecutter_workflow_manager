@@ -1,6 +1,6 @@
 {
   "project_name": "python_project",
-  "project_description": "A python project created by Martokk.",
+  "project_description": "A 'workflow_manager' python project created by Martokk.",
   "organization": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
   "license": ["MIT", "BSD-3", "GNU GPL v3.0", "Apache Software License 2.0"],
   "_all_python_minor_version": [10],
@@ -9,8 +9,8 @@
   "email": "hello@{{ cookiecutter.organization.lower().replace(' ', '-') }}.com",
   "version": "0.0.1",
   "line_length": 100,
-  "create_example_template": ["cli", "none"],
-  "create_dockerfile_template": ["yes", "no"],
+  "create_example_template": ["none", "cli"],
+  "create_dockerfile_template": ["no", "yes"],
   "_copy_without_render": [
     "poetry.lock"
   ]

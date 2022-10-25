@@ -10,6 +10,15 @@
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[workflow_manager]
+app_name = "{{ cookiecutter.project_name.title().replace('_', ' ').replace('-', ' ') }}"
+statusbar_text = "App designed by {{ cookiecutter.organization }}"
+about_text = "App designed by {{ cookiecutter.organization }}."
+pos_x = 0
+pos_y = 0
+height = 1200
+width = 800
+
 [tool.poetry]
 name = "{{ cookiecutter.project_name }}"
 version = "{{ cookiecutter.version }}"
@@ -42,6 +51,8 @@ classifiers = [  #! Update me
 [tool.poetry.dependencies]
 python = "^{{ cookiecutter.minimal_python_version }}"
 loguru = "^0.6.0"
+pyqt5 = "^5.15.7"
+workflow_manager = { git = "https://github.com/martokk/workflow_manager.git", branch = "main" }
 {% if cookiecutter.minimal_python_version == '3.7' -%}importlib_metadata = {version = "^4.5.0", python = "<3.8"}{%- endif -%}
 {%+ if cookiecutter.create_example_template == 'cli' %}
 typer = {extras = ["all"], version = "^0.6.1"}
@@ -68,6 +79,7 @@ coverage = "^6.1.2"
 coverage-badge = "^1.1.0"
 pytest-html = "^3.1.1"
 pytest-cov = "^4.0.0"
+pyqt5-stubs = "^5.15.6.0"
 
 [tool.black]
 # https://github.com/psf/black
