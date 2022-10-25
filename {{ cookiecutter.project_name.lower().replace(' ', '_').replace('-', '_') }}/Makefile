@@ -155,12 +155,7 @@ build-pyqt5-ui: ## Build PyQt5 QtDesigner UI File
 
 .PHONY: build-desktop-file
 build-desktop-file: ## Build .desktop File
-	echo "[Desktop Entry]\n"\
-		"Name=$(IMAGE)\n"\
-		"Icon=$(PYTHONPATH)/$(IMAGE)/resources/images/icon.png\n"\
-		"Type=Application\n"\
-		"Exec=$(PYTHONPATH)/dist_linux/$(IMAGE)\n"\
-		"Terminal=false" > "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
+	printf "[Desktop Entry]\nName=quick_capture\nIcon=$(PYTHONPATH)/$(IMAGE)/resources/images/icon.png\nType=Application\nExec=$(PYTHONPATH)/dist_linux/$(IMAGE)\nTerminal=false" > "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
 
 
 
@@ -168,7 +163,7 @@ build-desktop-file: ## Build .desktop File
 # INSTALL EXECUTABLE, SHORTCUTS, RESOURCES
 #-----------------------------------------------------------------------------------------
 .PHONY: install-linux
-install-linux: install-linux-executable install-linux-user-config  install-linux-desktop-file ## Full Installl of Executable, User Config(won't overwrite), Desktop File
+install-linux: install-linux-executable install-linux-user-config  install-desktop-file ## Full Installl of Executable, User Config(won't overwrite), Desktop File
 	echo "Completed Install."
 
 .PHONY: install-linux-executable
