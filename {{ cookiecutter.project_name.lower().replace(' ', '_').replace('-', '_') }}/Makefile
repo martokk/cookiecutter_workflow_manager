@@ -168,7 +168,7 @@ install-linux: install-linux-executable install-linux-user-config  install-deskt
 
 .PHONY: install-linux-executable
 install-linux-executable: ## Installs binary in ~/bin
-	mkdir -p ~/bin
+	mkdir -p $(HOME)/bin
 	ln -sfv $(PYTHONPATH)/dist_linux/$(IMAGE) /home/${USER}/bin/$(IMAGE)
 
 .PHONY: install-linux-user-config
@@ -178,12 +178,12 @@ install-linux-user-config: ## Installs config in ~/.vapps
 
 .PHONY: install-desktop-file
 install-desktop-file: build-desktop-file ## Install .desktop shortcut for user
-	desktop-file-install --dir=~/.local/share/applications "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
-	update-desktop-database ~/.local/share/applications
+	desktop-file-install --dir=$(HOME)/.local/share/applications "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
+	update-desktop-database $(HOME)/.local/share/applications
 
 .PHONY: update-desktop-database
 update-desktop-database: ## Updates Linux database of .desktop shortcuts
-	update-desktop-database ~/.local/share/applications
+	update-desktop-database $(HOME)/.local/share/applications
 
 
 #-----------------------------------------------------------------------------------------
