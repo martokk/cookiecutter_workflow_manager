@@ -128,6 +128,7 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+exclude = "typings"
 
 [[tool.mypy.overrides]]
 module = "*.pyqt5_ui"
