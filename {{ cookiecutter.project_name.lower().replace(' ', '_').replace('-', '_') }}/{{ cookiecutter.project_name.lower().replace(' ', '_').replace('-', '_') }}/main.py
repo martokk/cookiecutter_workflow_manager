@@ -6,12 +6,22 @@ from collections.abc import Callable
 from loguru import logger
 from PyQt5.QtWidgets import QApplication
 from workflow_manager.action_script import ActionScript
-from workflow_manager.config import import_pyproject_config
+from workflow_manager.config import Config
 from workflow_manager.workflow_manager import WorkflowManager
 
 from {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}.pyqt5_ui import Ui_MainWindow
 
 logger.add("log.log", level="TRACE", rotation="50 MB")
+
+CONFIG = Config(
+    app_name="WorkflowManagerExampleApp",
+    statusbar_text="App designed by v3services",
+    about_text="App designed by v3services.",
+    pos_x=0,
+    pos_y=0,
+    height=1200,
+    width=800,
+)
 
 
 class {{ cookiecutter.project_name.title().replace('_', '').replace('-', '') }}ActionScript(ActionScript):
@@ -24,7 +34,7 @@ class {{ cookiecutter.project_name.title().replace('_', '').replace('-', '') }}A
 class {{ cookiecutter.project_name.title().replace('_', '').replace('-', '') }}WorkflowManager(WorkflowManager):
     def __init__(self) -> None:
         self.ui = Ui_MainWindow()  # type: ignore # Imports QtDesigner UI
-        self.config = import_pyproject_config(pyproject_file="pyproject.toml")
+        self.config: Config = CONFIG
         super().__init__()
 
     # Line 1 Callbacks
