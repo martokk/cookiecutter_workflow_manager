@@ -7,6 +7,7 @@ PWD := `pwd`
 PROJECT := {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}
 PROJECT_TITLE := {{ cookiecutter.project_name.title().replace('_', ' ').replace('-', ' ') }}
 VERSION := latest
+PYINSTALLER_ENTRY := $(PROJECT)/__main__.py
 
 # poetry show black2 &> /dev/null && echo "true" || echo "false"
 
@@ -120,7 +121,7 @@ build-package: ## Build as Package
 #-----------------------------------------------------------------------------------------
 .PHONY: build-pyinstaller-linux
 build-pyinstaller-linux: ## Build Linux Executable
-	pyinstaller $(PROJECT)/__main__.py \
+	pyinstaller $(PYINSTALLER_ENTRY) \
 		--clean \
 		--onefile \
 		--windowed \
@@ -132,7 +133,7 @@ build-pyinstaller-linux: ## Build Linux Executable
 
 .PHONY: build-pyinstaller-win
 build-pyinstaller-win: ## Build Windows Executable
-	pyinstaller $(PROJECT)/__main__.py \
+	pyinstaller $(PYINSTALLER_ENTRY) \
 		--clean \
 		--onefile \
 		--windowed \
