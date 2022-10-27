@@ -9,12 +9,13 @@ from workflow_manager.action_script import ActionScript
 from workflow_manager.config import Config
 from workflow_manager.workflow_manager import WorkflowManager
 
+from {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }} import version
 from {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}.pyqt5_ui import Ui_MainWindow
 
 logger.add("log.log", level="TRACE", rotation="50 MB")
 
 CONFIG = Config(
-    app_name="WorkflowManagerExampleApp",
+    app_name=f"WorkflowManagerExample v{version}",
     statusbar_text="App designed by v3services",
     about_text="App designed by v3services.",
     pos_x=0,
