@@ -88,6 +88,7 @@ exclude = '''
     | dist
     | env
     | venv
+    | typings
 )/
 '''
 
@@ -96,7 +97,7 @@ exclude = '''
 py_version = {{ cookiecutter.minimal_python_version.replace('.', '') }}
 line_length = {{ cookiecutter.line_length }}
 
-known_typing = ["typing", "types", "typing_extensions", "mypy", "mypy_extensions"]
+known_typing = ["typing", "typings", "types", "typing_extensions", "mypy", "mypy_extensions"]
 sections = ["FUTURE", "TYPING", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 include_trailing_comma = true
 profile = "black"
@@ -104,7 +105,7 @@ multi_line_output = 3
 indent = 4
 color_output = true
 skip = ["pyqt5_ui.py", "resources_rc.py"]
-skip_glob = [".venv/*"]
+skip_glob = [".venv/*", "typings/*"]
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/latest/config_file.html#using-a-pyproject-toml-file
