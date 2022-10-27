@@ -1,10 +1,11 @@
 #* Variables
 SHELL := /usr/bin/env bash
 PYTHON := python
-PYTHONPATH := `pwd`
+PWD := `pwd`
 
 #* Docker variables
-IMAGE := {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}
+PROJECT := {{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}
+PROJECT_TITLE := {{ cookiecutter.project_name.title().replace('_', ' ').replace('-', ' ') }}
 VERSION := latest
 
 # poetry show black2 &> /dev/null && echo "true" || echo "false"
@@ -81,13 +82,13 @@ codestyle: ## Apply Formatting via PyUpgrade, ISort, Black.
 check-codestyle: ## Check Formatting via ISort, Black, darglint.
 	poetry run isort --diff --check-only --settings-path pyproject.toml ./
 	poetry run black --diff --check --config pyproject.toml ./
-	poetry run darglint --verbosity 2 $(IMAGE) tests
+	poetry run darglint --verbosity 2 $(PROJECT) tests
 
 .PHONY: check-safety
 check-safety: ## Check Securty & Safty via Bandit, Safety.
 	poetry check
 	poetry run safety check --full-report
-	poetry run bandit -ll --recursive $(IMAGE) tests
+	poetry run bandit -ll --recursive $(PROJECT) tests
 
 .PHONY: mypy
 mypy: ## Typechecking via MyPy
@@ -102,7 +103,7 @@ tests: test ## Run Tests & Coverage
 
 .PHONY: test
 test: ## Run Tests & Coverage
-	PYTHONPATH=$(PYTHONPATH) poetry run pytest -c pyproject.toml --cov-report=html --cov=$(IMAGE) tests/
+	PWD=$(PWD) poetry run pytest -c pyproject.toml --cov-report=html --cov=$(PROJECT) tests/
 	poetry run coverage-badge -o assets/images/coverage.svg -f
 
 
@@ -119,27 +120,27 @@ build-package: ## Build as Package
 #-----------------------------------------------------------------------------------------
 .PHONY: build-pyinstaller-linux
 build-pyinstaller-linux: ## Build Linux Executable
-	pyinstaller $(IMAGE)/__main__.py \
+	pyinstaller $(PROJECT)/__main__.py \
 		--clean \
 		--onefile \
 		--windowed \
-		--paths=$(PYTHONPATH)/$(IMAGE) \
-		--icon=$(PYTHONPATH)/assets/images/icon.png \
-		--workpath=$(PYTHONPATH)/build_linux \
-		--distpath=$(PYTHONPATH)/dist_linux \
-		--name=$(IMAGE)
+		--paths=$(PWD)/$(PROJECT) \
+		--icon=$(PWD)/assets/images/icon.png \
+		--workpath=$(PWD)/build_linux \
+		--distpath=$(PWD)/dist_linux \
+		--name=$(PROJECT)
 
 .PHONY: build-pyinstaller-win
 build-pyinstaller-win: ## Build Windows Executable
-	pyinstaller $(IMAGE)/__main__.py \
+	pyinstaller $(PROJECT)/__main__.py \
 		--clean \
 		--onefile \
 		--windowed \
-		--paths=$(PYTHONPATH)/$(IMAGE) \
-		--icon=$(PYTHONPATH)/assets/images/icon.png \
-		--workpath=$(PYTHONPATH)/build_win \
-		--distpath=$(PYTHONPATH)/dist_win \
-		--name=$(IMAGE)
+		--paths=$(PWD)/$(PROJECT) \
+		--icon=$(PWD)/assets/images/icon.png \
+		--workpath=$(PWD)/build_win \
+		--distpath=$(PWD)/dist_win \
+		--name=$(PROJECT)
 
 
 #-----------------------------------------------------------------------------------------
@@ -147,15 +148,15 @@ build-pyinstaller-win: ## Build Windows Executable
 #-----------------------------------------------------------------------------------------
 .PHONY: build-pyqt5-resources
 build-pyqt5-resources: ## Build PyQt5 Resources File
-	pyrcc5 $(PYTHONPATH)/assets/ui/resources.qrc -o $(PYTHONPATH)/$(IMAGE)/resources_rc.py
+	pyrcc5 $(PWD)/assets/ui/resources.qrc -o $(PWD)/$(PROJECT)/resources_rc.py
 
 .PHONY: build-pyqt5-ui
 build-pyqt5-ui: ## Build PyQt5 QtDesigner UI File
-	pyuic5 -x $(PYTHONPATH)/assets/ui/pyqt5_ui.ui -o $(PYTHONPATH)/$(IMAGE)/pyqt5_ui.py
+	pyuic5 -x $(PWD)/assets/ui/pyqt5_ui.ui -o $(PWD)/$(PROJECT)/pyqt5_ui.py
 
 .PHONY: build-desktop-file
 build-desktop-file: ## Build .desktop File
-	printf "[Desktop Entry]\nName=quick_capture\nIcon=$(PYTHONPATH)/assets/images/icon.png\nType=Application\nExec=$(PYTHONPATH)/dist_linux/$(IMAGE)\nTerminal=false" > "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
+	printf "[Desktop Entry]\nName=$(PROJECT_TITLE)\nIcon=$(PWD)/assets/images/icon.png\nType=Application\nExec=$(PWD)/dist_linux/$(PROJECT)\nTerminal=false" > "$(PWD)/dist_linux/$(PROJECT).desktop"
 
 
 
@@ -169,16 +170,16 @@ install-linux: install-linux-executable install-linux-user-config  install-deskt
 .PHONY: install-linux-executable
 install-linux-executable: ## Installs binary in ~/bin
 	mkdir -p $(HOME)/bin
-	ln -sfv $(PYTHONPATH)/dist_linux/$(IMAGE) /home/${USER}/bin/$(IMAGE)
+	ln -sfv $(PWD)/dist_linux/$(PROJECT) /home/${USER}/bin/$(PROJECT)
 
 .PHONY: install-linux-user-config
 install-linux-user-config: ## Installs config in ~/.vapps
-	test -f $(PYTHONPATH)/$(IMAGE)/.vapps/$(IMAGE).yaml && mkdir -p $(HOME)/.vapps || echo ""
-	test -f $(PYTHONPATH)/$(IMAGE)/.vapps/$(IMAGE).yaml && cp -n $(PYTHONPATH)/$(IMAGE)/.vapps/$(IMAGE).yaml $(HOME)/.vapps/$(IMAGE).yaml || echo ""
+	test -f $(PWD)/$(PROJECT)/.vapps/$(PROJECT).yaml && mkdir -p $(HOME)/.vapps || echo ""
+	test -f $(PWD)/$(PROJECT)/.vapps/$(PROJECT).yaml && cp -n $(PWD)/$(PROJECT)/.vapps/$(PROJECT).yaml $(HOME)/.vapps/$(PROJECT).yaml || echo ""
 
 .PHONY: install-desktop-file
 install-desktop-file: build-desktop-file ## Install .desktop shortcut for user
-	desktop-file-install --dir=$(HOME)/.local/share/applications "$(PYTHONPATH)/dist_linux/$(IMAGE).desktop"
+	desktop-file-install --dir=$(HOME)/.local/share/applications "$(PWD)/dist_linux/$(PROJECT).desktop"
 	update-desktop-database $(HOME)/.local/share/applications
 
 .PHONY: update-desktop-database
@@ -190,20 +191,20 @@ update-desktop-database: ## Updates Linux database of .desktop shortcuts
 # DOCKER
 #-----------------------------------------------------------------------------------------
 # Example: make docker-build VERSION=latest
-# Example: make docker-build IMAGE=some_name VERSION=0.0.1
+# Example: make docker-build PROJECT=some_name VERSION=0.0.1
 .PHONY: docker-build
 docker-build: ## Build a docker image from Dockerfile
-	@echo Building docker $(IMAGE):$(VERSION) ...
+	@echo Building docker $(PROJECT):$(VERSION) ...
 	docker build \
-		-t $(IMAGE):$(VERSION) . \
+		-t $(PROJECT):$(VERSION) . \
 		-f ./docker/Dockerfile --no-cache
 
 # Example: make docker-remove VERSION=latest
-# Example: make docker-remove IMAGE=some_name VERSION=0.0.1
+# Example: make docker-remove PROJECT=some_name VERSION=0.0.1
 .PHONY: docker-remove
 docker-remove: ## Remove Docker Image
-	@echo Removing docker $(IMAGE):$(VERSION) ...
-	docker rmi -f $(IMAGE):$(VERSION)
+	@echo Removing docker $(PROJECT):$(VERSION) ...
+	docker rmi -f $(PROJECT):$(VERSION)
 
 
 #-----------------------------------------------------------------------------------------
