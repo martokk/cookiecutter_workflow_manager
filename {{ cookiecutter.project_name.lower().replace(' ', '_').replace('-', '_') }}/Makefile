@@ -129,7 +129,8 @@ build-pyinstaller-linux: ## Build Linux Executable
 		--icon=$(PWD)/assets/images/icon.png \
 		--workpath=$(PWD)/build_linux \
 		--distpath=$(PWD)/dist_linux \
-		--name=$(PROJECT)
+		--name=$(PROJECT) \
+		--copy-metadata=$(PROJECT)
 
 .PHONY: build-pyinstaller-win
 build-pyinstaller-win: ## Build Windows Executable
@@ -141,7 +142,8 @@ build-pyinstaller-win: ## Build Windows Executable
 		--icon=$(PWD)/assets/images/icon.png \
 		--workpath=$(PWD)/build_win \
 		--distpath=$(PWD)/dist_win \
-		--name=$(PROJECT)
+		--name=$(PROJECT) \
+		--copy-metadata=$(PROJECT)
 
 
 #-----------------------------------------------------------------------------------------
